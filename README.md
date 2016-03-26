@@ -28,12 +28,12 @@
         addTable(TableName tableName, String sql) 
 
 
-- MessageNotify 消息通信类，类似EventBus，但是比起EventBus远远不及  
+- MessageNotify 消息通信类，观察者模式  
 
-  需要处理事件的注册:  
+  事件的订阅:  
 
         public void registerEvent(Object object, Method method)，注意这里注册的method必须是public，防止在其他类中调用时抛异常
 
-  执行事件时唤醒事件：  
+  唤醒事件：  
 
         public void sendMessage() 
