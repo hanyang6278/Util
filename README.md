@@ -6,7 +6,7 @@
 
         compile 'cn.alien95:util:1.0.6'
 
-  开发中常用的一些方法（如：Log，Toast，SnackBar，getScreenWidth,dip2px）。
+- 开发中常用的一些方法（如：Log，Toast，SnackBar，getScreenWidth,dip2px）。
   注意：Log的打印应该在Debug模式下。建议这样使用：   
 
         Utils.initialize(this);
@@ -32,7 +32,8 @@
 
   事件的订阅:  
 
-        public void registerEvent(Object object, Method method)，注意这里注册的method必须是public，防止在其他类中调用时抛异常
+        //注意这里注册的method必须是public，防止在其他类中调用时抛异常
+        public void registerEvent(Object object, Method method)
 
   唤醒事件：  
 
