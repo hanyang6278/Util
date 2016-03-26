@@ -1,6 +1,6 @@
 ## Utils--Android开发中一些常用操作
 
-  gradle依赖
+- gradle依赖
 
         compile 'cn.alien95:util:1.0.6'
 
