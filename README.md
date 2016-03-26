@@ -1,6 +1,4 @@
-## Util--Android开发中一些常用操作
-
-- Utils 工具类
+## Utils--Android开发中一些常用操作
 
   gradle依赖
 
