@@ -132,6 +132,12 @@ public class Utils {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    public static void closeInputMethod(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     /**
      * 把对象写入文件
      *
