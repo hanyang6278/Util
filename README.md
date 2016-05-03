@@ -28,23 +28,22 @@ gradle依赖
 #### SqlHelper 数据库辅助类  
 
 >数据库也是开发中必不可少的。SqlHelper类提供了表的创建，根据APP版本的更新自动升级表。  
-
-添加表的创建：   
    
 ```java
-  addTable(TableName tableName, String sql) 
+  SqlHelper.init(this, "AARecord");  //初始化数据库
+  SqlHelper.getInstance().addTable(API.TODO_TABLE_NAME, API.TODO_TABLE_SQL);  //添加数据库表
 ```
 
 #### MessageNotify 消息通信类，观察者模式
 
-事件的订阅:  
+事件的订阅
 
 ```java
   //注意这里注册的method必须是public，防止在其他类中调用时抛异常
   public void registerEvent(Object object, Method method)
 ```
 
-唤醒事件：  
+唤醒事件
 
 ```java
   public void sendMessage() 

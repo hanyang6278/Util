@@ -26,7 +26,7 @@ dependencies {
 
 ext {
     bintrayRepo = 'maven'////bintray上的仓库名，一般为maven
-    bintrayName = 'Util'//bintray上的项目名
+    bintrayName = 'util'//bintray上的项目名
 
     publishedGroupId = 'cn.alien95'//JCenter的GroupId
     artifact = 'util'//JCenter的ArtifactId
@@ -34,7 +34,7 @@ ext {
     siteUrl = 'https://github.com/llxdaxia/Utils'
     gitUrl = 'https://github.com/llxdaxia/Utils.git'
 
-    libraryVersion = '1.0.6'//版本号
+    libraryVersion = '1.0.7'//版本号
     libraryName = 'Util'//项目名字，没什么用
     libraryDescription = 'Some tools for Android'//项目描述，没什么用
 
@@ -50,5 +50,5 @@ ext {
     allLicenses = ["Apache-2.0"]
 }
 
-apply from: 'https://raw.githubusercontent.com/Jude95/JCenter/master/install.gradle'
-apply from: 'https://raw.githubusercontent.com/Jude95/JCenter/master/bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/llxdaxia/GradleScript/master/install_v1.gradle'
+apply from: 'https://raw.githubusercontent.com/llxdaxia/GradleScript/master/bintray_v1.gradle'
