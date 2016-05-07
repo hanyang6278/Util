@@ -3,7 +3,7 @@
 gradle依赖
 
 ```java
-  compile 'cn.alien95:util:1.0.6'
+  compile 'cn.alien95:util:1.0.8'
 ```
 
 ### 使用方法
