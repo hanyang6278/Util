@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,36 +16,22 @@ import java.util.Map;
  * Created by linlongxin on 2016/1/5.
  * 数据库辅助类
  */
-public class SqlHelper extends SQLiteOpenHelper {
+public class SQLHelper extends SQLiteOpenHelper {
 
+    private final String TAG = "SQLHelper";
     private static String DATABASE_NAME;
-
     private static Context mContext;
-    private SQLiteDatabase database;
-
-    private static SqlHelper instance;
+    private static SQLiteDatabase database;
 
     //key是表的name,value是表的sql建表语句
     private Map<String, String> tables = new HashMap<>();
 
-    private SqlHelper(Context context, String dataBaseName) {
+    public SQLHelper(Context context, String dataBaseName) {
         super(context, dataBaseName, null, Utils.getAppVersion());
-    }
-
-    public static SqlHelper getInstance() {
-        return instance;
-    }
-
-    /**
-     * 初始化数据库
-     *
-     * @param context
-     * @param dataBaseName
-     */
-    public static void initialize(Context context, String dataBaseName) {
-        instance = new SqlHelper(context, dataBaseName);
         DATABASE_NAME = dataBaseName;
         mContext = context;
+        database = getWritableDatabase();
+        Log.i(TAG,"db == null : " + (database == null));
     }
 
     /**
@@ -63,7 +50,6 @@ public class SqlHelper extends SQLiteOpenHelper {
         for (Map.Entry<String, String> table : tables.entrySet()) {
             db.execSQL(table.getValue());
         }
-        database = getWritableDatabase();
     }
 
     public SQLiteDatabase getDataBase() {
@@ -140,6 +126,5 @@ public class SqlHelper extends SQLiteOpenHelper {
     public boolean deleteDataBase() {
         return mContext.deleteDatabase(DATABASE_NAME);
     }
-
 
 }

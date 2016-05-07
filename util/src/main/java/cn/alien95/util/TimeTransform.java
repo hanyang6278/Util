@@ -10,9 +10,11 @@ import java.util.Date;
  */
 public class TimeTransform {
 
-    private static final int DAY_OF_MILLISECONDS = 1000 * 60 * 60 * 24;
-    private static final int HOUR_OF_MILLISECONDS = 1000 * 60 * 60;
-    private static final int MINUTES_OF_MILLISECONDS = 1000 * 60;
+    private static final long YEAR_OF_MILLISECONDS = 1000 * 60 * 60 * 24 * 365;
+    private static final long MOUTH_OF_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
+    private static final long DAY_OF_MILLISECONDS = 1000 * 60 * 60 * 24;
+    private static final long HOUR_OF_MILLISECONDS = 1000 * 60 * 60;
+    private static final long MINUTES_OF_MILLISECONDS = 1000 * 60;
 
     /**
      * 按照格式转换成对应日期
@@ -21,7 +23,7 @@ public class TimeTransform {
      * @param format       yyyy-MM-dd  HH:mm:ss 类似的日期
      * @return
      */
-    public static String transformFormat(long milliseconds, String format) {
+    public static String getCustomFormat(long milliseconds, String format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         Date date = new Date(milliseconds);
         return formatter.format(date);
@@ -33,7 +35,7 @@ public class TimeTransform {
      * @param milliseconds 时间戳，单位毫秒
      * @return 返回星期几
      */
-    public static int transformDayOfWeek(long milliseconds) {
+    public static int getDayOfWeek(long milliseconds) {
         Date date = new Date(milliseconds);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -46,24 +48,16 @@ public class TimeTransform {
      * @param milliseconds
      * @return
      */
-    public static String transformDateAndDayOfWeek(long milliseconds) {
-        Date currentDate = new Date(System.currentTimeMillis());
-        Calendar currentCalendar = Calendar.getInstance();
-        currentCalendar.setTime(currentDate);
-
+    public static String getDateAndDayOfWeek(long milliseconds) {
         Date date = new Date(milliseconds);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         SimpleDateFormat formatter;
 
-        if (Calendar.YEAR == Calendar.YEAR) {
-            formatter = new SimpleDateFormat("MM月dd日");
-            return formatter.format(calendar) + "(周" + Calendar.DAY_OF_WEEK + ")";
-        } else {
-            formatter = new SimpleDateFormat("yyyy年MM月dd日");
-            return formatter.format(calendar);
-        }
+        formatter = new SimpleDateFormat("MM月dd日");
+        return formatter.format(calendar) + "(周" + Calendar.DAY_OF_WEEK + ")";
+
     }
 
     /**
@@ -72,7 +66,7 @@ public class TimeTransform {
      * @param milliseconds
      * @return
      */
-    public static String transformRecentlyDate(long milliseconds) {
+    public static String getRecentlyDate(long milliseconds) {
         long currentMilliseconds = System.currentTimeMillis();
         long timeDistance = currentMilliseconds - milliseconds;
         if (timeDistance < 1000) {
@@ -87,7 +81,7 @@ public class TimeTransform {
                 if (timeDistance / HOUR_OF_MILLISECONDS < 24) {
                     return timeDistance / HOUR_OF_MILLISECONDS + "小时前";
                 } else {
-                    if (timeDistance / DAY_OF_MILLISECONDS < 30) {
+                    if (timeDistance / DAY_OF_MILLISECONDS < 3) {
                         return timeDistance / DAY_OF_MILLISECONDS + "天前";
                     }
                 }
@@ -104,17 +98,23 @@ public class TimeTransform {
                 if (timeDistance / HOUR_OF_MILLISECONDS < 24) {
                     return timeDistance / HOUR_OF_MILLISECONDS + "小时后";
                 } else {
-                    if (timeDistance / DAY_OF_MILLISECONDS < 30) {
+                    if (timeDistance / DAY_OF_MILLISECONDS < 3) {
                         return timeDistance / DAY_OF_MILLISECONDS + "天后";
                     }
                 }
             }
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat simpleDateFormat;
+        if (timeDistance < YEAR_OF_MILLISECONDS) {
+            simpleDateFormat = new SimpleDateFormat("MM/dd");
+        } else {
+            simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        }
+
         return simpleDateFormat.format(new Date(milliseconds));
     }
 
-    public static String transformDate(long milliseconds){
+    public static String getSimple(long milliseconds) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd");
         return simpleDateFormat.format(new Date(milliseconds));
     }
