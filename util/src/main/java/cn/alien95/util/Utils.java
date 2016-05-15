@@ -82,6 +82,10 @@ public class Utils {
         mContext = context;
     }
 
+    public static Context getContext(){
+        return mContext;
+    }
+
     public static void setDebug(boolean isDebug, String tag) {
         IS_DEBUG = isDebug;
         TAG = tag;

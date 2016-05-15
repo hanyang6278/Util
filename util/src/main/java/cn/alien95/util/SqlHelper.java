@@ -30,8 +30,6 @@ public class SQLHelper extends SQLiteOpenHelper {
         super(context, dataBaseName, null, Utils.getAppVersion());
         DATABASE_NAME = dataBaseName;
         mContext = context;
-        database = getWritableDatabase();
-        Log.i(TAG,"db == null : " + (database == null));
     }
 
     /**
@@ -42,6 +40,8 @@ public class SQLHelper extends SQLiteOpenHelper {
      */
     public void addTable(String tableName, String sql) {
         tables.put(tableName, sql);
+        database = getWritableDatabase();
+        Log.i(TAG,"db == null : " + (database == null));
     }
 
     @Override
