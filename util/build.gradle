@@ -30,6 +30,7 @@ ext {
 
     publishedGroupId = 'cn.alien95'
     artifact = 'util'
+
     libraryVersion = '1.1.0'
 
     siteUrl = 'https://github.com/llxdaxia/Utils'
