@@ -104,7 +104,7 @@ public class ImageUtil {
 
     }
 
-    private static Bitmap decodeFile(File f) {
+    public static Bitmap decodeFile(File f) {
         Bitmap b = null;
         try {
             BitmapFactory.Options o = new BitmapFactory.Options();
