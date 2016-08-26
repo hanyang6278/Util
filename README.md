@@ -22,6 +22,7 @@ gradle依赖
 
 ### 图片工具
 >从相机或者相册选取图片
+
 ```
 ImageUtil.getImageFromAlbum(UploadFileActivity.this);
 ImageUtil.getImageFromCamera(UploadFileActivity.this);
@@ -62,7 +63,7 @@ ImageUtil.getImageFromCamera(UploadFileActivity.this);
   public void notifyChange()
 ```
 
- - 注销 --- 一定要注销，防止内存泄露
+ - 注销 --- 防止内存泄露
 ```
 public void unRegisterEvent(Object object)
 ```
