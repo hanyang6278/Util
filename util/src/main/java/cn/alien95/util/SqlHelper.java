@@ -13,15 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by linlongxin on 2016/1/5.
  * 数据库辅助类
+ * Created by linlongxin on 2016/1/5.
  */
 public class SQLHelper extends SQLiteOpenHelper {
 
     private final String TAG = "SQLHelper";
     private static String DATABASE_NAME;
     private static Context mContext;
-    private static SQLiteDatabase database;
+    private static SQLiteDatabase mDatabase;
 
     //key是表的name,value是表的sql建表语句
     private Map<String, String> tables = new HashMap<>();
@@ -34,14 +34,11 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     /**
      * 添加表的创建
-     *
-     * @param tableName
-     * @param sql
      */
     public void addTable(String tableName, String sql) {
         tables.put(tableName, sql);
-        database = getWritableDatabase();
-        Log.i(TAG,"db == null : " + (database == null));
+        mDatabase = getWritableDatabase();
+        Log.i(TAG,"db == null : " + (mDatabase == null));
     }
 
     @Override
@@ -53,36 +50,36 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     public SQLiteDatabase getDataBase() {
-        return database;
+        return mDatabase;
     }
 
     public void execSQL(String sql){
-        database.execSQL(sql);
+        mDatabase.execSQL(sql);
     }
 
     public long insert(String table, String nullColumnHack, ContentValues values) {
-        return database.insert(table, nullColumnHack, values);
+        return mDatabase.insert(table, nullColumnHack, values);
     }
 
     public int delete(String table, String whereClause, String[] whereArgs) {
-        return database.delete(table, whereClause, whereArgs);
+        return mDatabase.delete(table, whereClause, whereArgs);
     }
 
     public int update(String table, ContentValues values, String whereClause, String[] whereArgs) {
-        return database.update(table, values, whereClause, whereArgs);
+        return mDatabase.update(table, values, whereClause, whereArgs);
     }
 
     public Cursor query(boolean distinct, String table, String[] columns,
                         String selection, String[] selectionArgs, String groupBy,
                         String having, String orderBy, String limit) {
-        return database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return mDatabase.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     public Cursor query(boolean distinct, String table, String[] columns,
                         String selection, String[] selectionArgs, String groupBy,
                         String having, String orderBy, String limit, CancellationSignal cancellationSignal) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal);
+            return mDatabase.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal);
         } else {
             return null;
         }
@@ -91,21 +88,17 @@ public class SQLHelper extends SQLiteOpenHelper {
     public Cursor query(String table, String[] columns, String selection,
                         String[] selectionArgs, String groupBy, String having,
                         String orderBy, String limit) {
-        return database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return mDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     public Cursor query(String table, String[] columns, String selection,
                         String[] selectionArgs, String groupBy, String having,
                         String orderBy) {
-        return database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+        return mDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
     }
 
     /**
      * 更新数据库通过APP版本
-     *
-     * @param db
-     * @param oldVersion
-     * @param newVersion
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
