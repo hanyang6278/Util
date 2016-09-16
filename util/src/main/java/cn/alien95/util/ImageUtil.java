@@ -15,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -76,68 +78,9 @@ public class ImageUtil {
         return true;
     }
 
-    //uri --> bitmap 把uri对应的图片压缩后转换成Bitmap
-    public static void compress(final Uri uri, final int width, final int height, final Callback callback) {
-        String filePath = new StringBuilder(String.valueOf(uri)).delete(0, 7).toString(); //删除file://
-        compress(filePath, width, height, callback);
-//        if (handler == null) {
-//            handler = new Handler(Looper.getMainLooper());
-//        }
-//        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(Utils.getContext().getContentResolver(), uri);
-//                    File file = new File(Utils.getCacheDir(), System.currentTimeMillis() + ".jpg");
-//                    compress(bitmap, file);
-//                    final Bitmap newBitmap = compress(file, width, height);
-//                    handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            callback.callback(newBitmap);
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    Utils.Log("[Android]  " + e.getMessage());
-//                    Utils.Log("[Android] -- 目录为：" + uri);
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-    }
-
-    public static void compress(final String filePath, final int width, final int height, final Callback callback) {
-        if (handler == null) {
-            handler = new Handler(Looper.getMainLooper());
-        }
-        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Bitmap newBitmap = compress(new File(filePath), width, height);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callback.callback(newBitmap);
-                        }
-                    });
-                } catch (Exception e) {
-                    Utils.Log("[Android]  " + e.getMessage());
-                    Utils.Log("[Android] -- 目录为：" + filePath);
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    //uri -- > bitmap 默认200px
-    public static void compress(final Uri uri, final Callback callback) {
-        compress(uri, 200, 200, callback);
-    }
-
+    /*-----------------------------file----------------------------*/
     //file_path --> file_path
     public static void compress(final String resourcePath, final File target, final int width, final int height) {
-        final Uri uri = Uri.parse("file://" + resourcePath);
         if (handler == null) {
             handler = new Handler(Looper.getMainLooper());
         }
@@ -145,11 +88,9 @@ public class ImageUtil {
             @Override
             public void run() {
                 try {
-                    final Bitmap newBitmap = compress(new File(resourcePath), width, height);
-                    compress(newBitmap, target);
+                    Bitmap bitmap = compress(new File(resourcePath), width, height);
+                    saveBitmap(bitmap, target); //保存文件
                 } catch (Exception e) {
-                    Utils.Log("[Android]  " + e.getMessage());
-                    Utils.Log("[Android] -- 目录为：" + uri);
                     e.printStackTrace();
                 }
             }
@@ -161,7 +102,7 @@ public class ImageUtil {
         compress(resourcePath, new File(targetPath), width, height);
     }
 
-    //默认200px
+    //file_path --> file 默认200px
     public static void compress(String resourcePath, final File target) {
         compress(resourcePath, target, 200, 200);
     }
@@ -176,11 +117,118 @@ public class ImageUtil {
         compress(resource, target, 200, 200);
     }
 
-    //file --> bitmap 长或宽压缩到200像素以内
-    public static Bitmap compress(File f) {
-        return compress(f, 200, 200);
+    //List<file_path>-->List<Bitmap>
+    public static void compress(final List<String> paths,
+                                final int width,
+                                final int height,
+                                final ListCallback callback) {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final List<Bitmap> bitmaps = new ArrayList<>();
+                    for (String path : paths) {
+                        Utils.Log("[Android] -- 目录为：" + path);
+                        Bitmap bitmap = compress(new File(path), width, height);
+                        bitmaps.add(bitmap);
+                    }
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.callback(bitmaps);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
+    //同上，默认200px
+    public static void compress(final List<String> paths,
+                                final ListCallback callback) {
+        compress(paths, 200, 200, callback);
+    }
+
+    public static void compress(final List<String> paths,
+                                final int width,
+                                final int height,
+                                final ListCallback callback,
+                                final ListPathCallback listPathCallback) {
+
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final List<Bitmap> bitmaps = new ArrayList<>();
+                    final List<File> targets = new ArrayList<>();
+                    for (String path : paths) {
+                        Bitmap bitmap = compress(path, width, height);
+                        String targetPath = Utils.getCacheDir() +
+                                File.separator + System.currentTimeMillis()
+                                + ".jpg";
+                        //创建保存文件
+                        File target = new File(targetPath);
+                        if (!target.exists()) {
+                            target.createNewFile();
+                        }
+                        saveBitmap(bitmap, target); //保存到文件
+                        bitmaps.add(bitmap);
+                        targets.add(target);
+                    }
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.callback(bitmaps);
+                            listPathCallback.callback(targets);
+                        }
+                    });
+                } catch (Exception e) {
+                    Utils.Log("[Android]  " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    public static void compress(final List<String> paths,
+                                final ListCallback callback,
+                                final ListPathCallback listPathCallback) {
+        compress(paths,200,200,callback,listPathCallback);
+    }
+    //压缩到目标文件并回调压缩的Bitmap
+    public static void compress(final File resource,
+                                final File target,
+                                final int width,
+                                final int height,
+                                final Callback callback) {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bitmap = compress(resource, width, height);
+                    saveBitmap(bitmap, target); //保存到文件
+                    callback.callback(bitmap);
+                } catch (Exception e) {
+                    Utils.Log("[Android]  " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /*------------------------------Bitmap----------------------------*/
     //file --> bitmap 长或宽压缩到指定像素以内
     public static Bitmap compress(File f, int width, int height) {
         Bitmap b = null;
@@ -209,6 +257,55 @@ public class ImageUtil {
         return b;
     }
 
+    public static Bitmap compress(String path, int width, int height) {
+        return compress(new File(path), width, height);
+    }
+
+    //file --> bitmap 长或宽压缩到200像素以内
+    public static Bitmap compress(File f) {
+        return compress(f, 200, 200);
+    }
+
+    //file_path --> bitmap
+    public static void compress(final String filePath, final int width, final int height, final Callback callback) {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Bitmap bitmap = compress(new File(filePath), width, height);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.callback(bitmap);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    //file_path --> bitmap
+    public static void compress(final String filePath, final Callback callback) {
+        compress(filePath, 200, 200, callback);
+    }
+    //uri --> bitmap 把uri对应的图片压缩后转换成Bitmap
+    public static void compress(final Uri uri, final int width, final int height, final Callback callback) {
+        String filePath = new StringBuilder(String.valueOf(uri)).delete(0, 7).toString(); //删除file://
+        compress(filePath, width, height, callback);
+    }
+
+    //uri -- > bitmap 默认200px
+    public static void compress(final Uri uri, final Callback callback) {
+        compress(uri, 200, 200, callback);
+    }
+
+
+    /*-------------------------------------------------------------*/
     //计算图片的缩放值
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
@@ -223,9 +320,32 @@ public class ImageUtil {
         return inSampleSize;
     }
 
+    //不压缩，保存到文件
+    public static boolean saveBitmap(Bitmap photo, File file) {
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    new FileOutputStream(file, false));
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     //回调
     public interface Callback {
 
         void callback(Bitmap bitmap);
+    }
+
+    public interface ListCallback {
+        void callback(List<Bitmap> bitmaps);
+    }
+
+    public interface ListPathCallback {
+        void callback(List<File> files);
     }
 }

@@ -144,9 +144,6 @@ public class Utils {
 
     /**
      * 把对象写入文件
-     *
-     * @param object
-     * @param file
      */
     public static void writeObjectToFile(Object object, File file) {
         try {
@@ -163,9 +160,6 @@ public class Utils {
 
     /**
      * 从文件中读取对象
-     *
-     * @param file
-     * @return
      */
     public static Object readObjectFromFile(File file) {
         try {
@@ -185,8 +179,6 @@ public class Utils {
 
     /**
      * 获取版本号
-     *
-     * @return
      */
     public static int getAppVersion() {
         PackageManager manager = mContext.getPackageManager();
@@ -201,8 +193,6 @@ public class Utils {
 
     /**
      * 获取根目录下的cache地址
-     *
-     * @return
      */
     public static File getCacheDir() {
         return mContext.getExternalCacheDir();
@@ -227,9 +217,6 @@ public class Utils {
 
     /**
      * file转化为bitmap
-     *
-     * @param file
-     * @return
      */
     public static Bitmap fileToBitmap(File file) {
         String filePath = file.getPath();
@@ -247,9 +234,6 @@ public class Utils {
 
     /**
      * bitmap保存为图片文件
-     *
-     * @param bitmap
-     * @param filePath
      */
     public static void saveBitmapFile(Bitmap bitmap, String filePath) {
         File file = new File(filePath);//将要保存图片的路径
@@ -283,9 +267,6 @@ public class Utils {
 
     /**
      * 字节转换成16进制字符串
-     *
-     * @param bytes
-     * @return
      */
     private static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -382,10 +363,6 @@ public class Utils {
 
     /**
      * SP
-     *
-     * @param name
-     * @param mode
-     * @return
      */
     public static SharedPreferences getSharedPreferences(String name, int mode) {
         return mContext.getSharedPreferences(name, mode);
@@ -393,10 +370,6 @@ public class Utils {
 
     /**
      * SP存储string
-     *
-     * @param sp
-     * @param key
-     * @param value
      */
     public static void SPPutString(SharedPreferences sp, String key, String value) {
         SharedPreferences.Editor editor = sp.edit();
@@ -406,10 +379,6 @@ public class Utils {
 
     /**
      * SP存储Int
-     *
-     * @param sp
-     * @param key
-     * @param value
      */
     public static void SPPutInt(SharedPreferences sp, String key, int value) {
         SharedPreferences.Editor editor = sp.edit();
@@ -419,8 +388,6 @@ public class Utils {
 
     /**
      * 拨打电话
-     *
-     * @param phoneNumber
      */
     public static void call(String phoneNumber) {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -438,8 +405,6 @@ public class Utils {
 
     /**
      * 跳转至拨号界面
-     *
-     * @param phoneNumber
      */
     public static void callDial(String phoneNumber) {
         mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
@@ -447,9 +412,6 @@ public class Utils {
 
     /**
      * 发送短信
-     *
-     * @param phoneNumber
-     * @param content
      */
     public static void sendSms(String phoneNumber,
                                String content) {
@@ -480,8 +442,6 @@ public class Utils {
 
     /**
      * 判断当前App处于前台还是后台状态
-     *
-     * @return
      */
     public static boolean isApplicationBackground() {
         ActivityManager am = (ActivityManager) mContext
@@ -499,8 +459,6 @@ public class Utils {
 
     /**
      * 判断当前手机是否处于锁屏(睡眠)状态
-     *
-     * @return
      */
     public static boolean isSleeping() {
         KeyguardManager kgMgr = (KeyguardManager) mContext
@@ -540,8 +498,6 @@ public class Utils {
 
     /**
      * 安装APK
-     *
-     * @param file
      */
     public static void installApk(File file) {
         Intent intent = new Intent();
@@ -556,8 +512,6 @@ public class Utils {
 
     /**
      * 判断当前设备是否为手机
-     *
-     * @return
      */
     public static boolean isPhone() {
         TelephonyManager telephony = (TelephonyManager) mContext
@@ -572,9 +526,6 @@ public class Utils {
 
     /**
      * 获取当前设备的IMEI，需要与上面的isPhone()一起使用
-     *
-     * @param context
-     * @return
      */
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static String getDeviceIMEI(Context context) {
@@ -593,8 +544,6 @@ public class Utils {
 
     /**
      * 获取当前设备的MAC地址
-     *
-     * @return
      */
     public static String getMacAddress() {
         String macAddress;
@@ -611,8 +560,6 @@ public class Utils {
 
     /**
      * 是否有SD卡
-     *
-     * @return
      */
     public static boolean haveSDCard() {
         return Environment.getExternalStorageState().equals(
@@ -621,8 +568,6 @@ public class Utils {
 
     /**
      * 动态隐藏软键盘
-     *
-     * @param activity
      */
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static void hideSoftInput(Activity activity) {
@@ -644,9 +589,6 @@ public class Utils {
 
     /**
      * 动态显示软键盘
-     *
-     * @param context
-     * @param edit
      */
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static void showSoftInput(Context context, EditText edit) {
@@ -656,22 +598,6 @@ public class Utils {
         InputMethodManager inputManager = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.showSoftInput(edit, 0);
-    }
-
-    /**
-     * 动态显示或者是隐藏软键盘
-     *
-     * @param context
-     * @param edit
-     */
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
-    public static void toggleSoftInput(Context context, EditText edit) {
-        edit.setFocusable(true);
-        edit.setFocusableInTouchMode(true);
-        edit.requestFocus();
-        InputMethodManager inputManager = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     /**
@@ -687,9 +613,6 @@ public class Utils {
 
     /**
      * 获取状态栏高度
-     *
-     * @param activity
-     * @return
      */
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static int getStatusBarHeight(Activity activity) {
@@ -701,8 +624,6 @@ public class Utils {
     /**
      * 获取MCC+MNC代码 (SIM卡运营商国家代码和运营商网络代码)
      * 仅当用户已在网络注册时有效, CDMA 可能会无效（中国移动：46000 46002, 中国联通：46001,中国电信：46003）
-     *
-     * @return
      */
     public static String getNetworkOperator() {
         TelephonyManager telephonyManager = (TelephonyManager) mContext
@@ -713,8 +634,6 @@ public class Utils {
     /**
      * 返回移动网络运营商的名字
      * (例：中国联通、中国移动、中国电信) 仅当用户已在网络注册时有效, CDMA 可能会无效)
-     *
-     * @return
      */
     public static String getNetworkOperatorName() {
         TelephonyManager telephonyManager = (TelephonyManager) mContext
@@ -728,8 +647,6 @@ public class Utils {
      * PHONE_TYPE_GSM :1 手机制式为GSM，移动和联通
      * PHONE_TYPE_CDMA :2 手机制式为CDMA，电信
      * PHONE_TYPE_SIP:3
-     *
-     * @return
      */
     public static int getPhoneType() {
         TelephonyManager telephonyManager = (TelephonyManager) mContext
@@ -769,8 +686,6 @@ public class Utils {
     /**
      * 判断手机连接的网络类型(2G,3G,4G)
      * 联通的3G为UMTS或HSDPA，移动和联通的2G为GPRS或EGDE，电信的2G为CDMA，电信的3G为EVDO
-     *
-     * @return
      */
     public static int getNetWorkClass() {
         TelephonyManager telephonyManager = (TelephonyManager) mContext
@@ -805,8 +720,6 @@ public class Utils {
 
     /**
      * 判断当前手机的网络类型(WIFI还是2,3,4G)
-     *
-     * @return
      */
     public static int getNetWorkStatus() {
         int netWorkType = Constants.NETWORK_CLASS_UNKNOWN;
@@ -830,9 +743,6 @@ public class Utils {
 
     /**
      * px-sp转换
-     *
-     * @param pxValue
-     * @return
      */
     public static int px2sp(float pxValue) {
         final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
@@ -841,9 +751,6 @@ public class Utils {
 
     /**
      * sp-px转换
-     *
-     * @param spValue
-     * @return
      */
     public static int sp2px(float spValue) {
         final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
@@ -852,10 +759,6 @@ public class Utils {
 
     /**
      * 字符串解析成毫秒数
-     *
-     * @param str
-     * @param pattern
-     * @return
      */
     public static long string2Millis(String str, String pattern) {
         SimpleDateFormat format = new SimpleDateFormat(pattern,
@@ -871,7 +774,6 @@ public class Utils {
 
     /**
      * 获取cpu核数
-     * @return
      */
     public static int getNumberOfCPUCores() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
