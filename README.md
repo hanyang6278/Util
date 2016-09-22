@@ -3,7 +3,7 @@
 gradle依赖
 
 ```
-  compile 'cn.alien95:util:1.1.2'
+  compile 'cn.alien95:util:1.1.3'
 ```
 
 ## 使用方法
@@ -21,11 +21,12 @@ gradle依赖
 ```
 
 ### 图片工具
->从相机或者相册选取图片
+>从相机或者相册选取图片，图片压缩
 
 ```
 ImageUtil.getImageFromAlbum(UploadFileActivity.this);
 ImageUtil.getImageFromCamera(UploadFileActivity.this);
+ImageUtil.compress();
 ```
 
 ### TimeTransform 时间戳格式转换类
