@@ -25,7 +25,7 @@ import java.util.List;
 public class ImageUtil {
 
     public static final int REQUEST_CODE_PICK_IMAGE = 357;
-    public static final int REQUEST_CODE_CAPTURE_CAMEIA = 951;
+    public static final int REQUEST_CODE_CAPTURE_CAMERA = 951;
     private static Handler handler;
 
     /**
@@ -46,7 +46,7 @@ public class ImageUtil {
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
             Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
-            activity.startActivityForResult(getImageByCamera, REQUEST_CODE_CAPTURE_CAMEIA);
+            activity.startActivityForResult(getImageByCamera, REQUEST_CODE_CAPTURE_CAMERA);
         } else {
             Utils.ToastLong("请确认已经插入SD卡");
         }
@@ -232,32 +232,32 @@ public class ImageUtil {
 
     /*------------------------------Bitmap----------------------------*/
     //file --> bitmap 长或宽压缩到指定像素以内
-    public static Bitmap compress(File f, int width, int height) {
-        Bitmap b = null;
+    public static Bitmap compress(File source, int width, int height) {
+        Bitmap bitmap = null;
         try {
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
 
-            FileInputStream fis = new FileInputStream(f);
-            BitmapFactory.decodeStream(fis, null, o);
+            FileInputStream fis = new FileInputStream(source);
+            BitmapFactory.decodeStream(fis, null, options);
             fis.close();
 
             int scale = 1;
-            if (o.outHeight > width && o.outWidth > height) {
+            if (options.outHeight > width && options.outWidth > height) {
                 int max = width > height ? width : height;
-                scale = (int) Math.pow(2, (int) Math.round(Math.log(max / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+                scale = (int) Math.pow(2, (int) Math.round(Math.log(max / (double) Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
             }
 
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            fis = new FileInputStream(f);
-            b = BitmapFactory.decodeStream(fis, null, o2);
+            BitmapFactory.Options options2 = new BitmapFactory.Options();
+            options2.inSampleSize = scale;
+            fis = new FileInputStream(source);
+            bitmap = BitmapFactory.decodeStream(fis, null, options2);
             fis.close();
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return b;
+        return bitmap;
     }
 
     public static Bitmap compress(String path, int width, int height) {
@@ -334,9 +334,38 @@ public class ImageUtil {
             bos.close();
         } catch (Exception e) {
             e.printStackTrace();
+            Utils.Log(e.getMessage());
             return false;
         }
         return true;
+    }
+
+    //不压缩
+    public static void getBitmapFromPath(final String filePath, final Callback callback) {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        AsyncThreadPool.getInstance().executeRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap;
+                try {
+                    File file = new File(filePath);
+                    FileInputStream fis = new FileInputStream(file);
+                    bitmap = BitmapFactory.decodeStream(fis);
+                    fis.close();
+                    final Bitmap finalBitmap = bitmap;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.callback(finalBitmap);
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     //回调
