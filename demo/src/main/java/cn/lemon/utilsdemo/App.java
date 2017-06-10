@@ -1,8 +1,8 @@
-package cn.alien95.utilslibrary;
+package cn.lemon.utilsdemo;
 
 import android.app.Application;
 
-import cn.alien95.util.Utils;
+import cn.lemon.util.Utils;
 
 /**
  * Created by linlongxin on 2016/1/21.

@@ -1,10 +1,10 @@
-package cn.alien95.utilslibrary;
+package cn.lemon.utilsdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import cn.alien95.util.SQLHelper;
-import cn.alien95.util.Utils;
+import cn.lemon.util.SQLHelper;
+import cn.lemon.util.Utils;
 
 
 public class MainActivity extends AppCompatActivity {
